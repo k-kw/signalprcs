@@ -1,6 +1,6 @@
 /build/*
 /*.txt
-!CMakeLists.txt
+/CMakeLists.txt
 /sos/*
 /bmps/*
 /*.bmp
