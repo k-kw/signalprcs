@@ -24,6 +24,7 @@ __global__ void normfft(cufftComplex* dev, int x, int y);
 __global__ void pow_norm_fft1d(uc* pow, cufftComplex* dev, int num, int size);
 
 // signal process
+__global__ void BPF(cuComplex* dev, float strt, float end, int num, int size);
 __global__ void HPF(cuComplex* dev, float cutrate, int num, int size);
 __global__ void LPF(cuComplex* dev, float cutrate, int num, int size);
 

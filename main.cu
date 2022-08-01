@@ -39,7 +39,11 @@ typedef long long ll;
 
 
 // コマンド引数
-// input(output) directory, input file name, output file name, data size, amount of data, L(LPF) or H(HPF), cutrate 
+// LPF or HPF
+// input(output) directory, input file name, output file name, data size, amount of data, L(LPF) or H(HPF), cutrate(LPF or HPF) 
+// BPF
+// input(output) directory, input file name, output file name, data size, amount of data, start_path_rate, end_path_rate 
+
 int main(int argc, char* argv[]){
     if(argc!=8){
         cout<<"this program need seven variables"<<endl;
@@ -96,13 +100,20 @@ int main(int argc, char* argv[]){
         //signal process
         //周波数シフトしていないことに注意
         if((string)argv[6]==(string)"H"){
+            // HPF
             HPF<<<(N + BS - 1) / BS, BS >>>(devcfc, atof(argv[7]), N, SIZE);
-            cout<<"signal processing."<<endl;
+            cout<<"execute HPF"<<endl;
         }
         else if((string)argv[6]==(string)"L"){
+            // LPF
             LPF<<<(N + BS - 1) / BS, BS >>>(devcfc, atof(argv[7]), N, SIZE);
-            cout<<"signal processing."<<endl;
+            cout<<"execute LPF"<<endl;
 
+        }
+        else{
+            // BPF
+            BPF<<<(N + BS - 1) / BS, BS >>>(devcfc, atof(argv[6]), atof(argv[7]), N, SIZE);
+            cout<<"execute BPF"<<endl;
         }
 
         //IFFT

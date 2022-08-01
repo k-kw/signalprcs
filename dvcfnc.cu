@@ -92,6 +92,32 @@ __global__ void pow_norm_fft1d(uc* pow, cufftComplex* dev, int num, int size)
 
 
 // signal process 1d
+// BPF
+// 周波数0から数えてstrt%~end%までを通す(他を0にする)
+// 計算はシフトしていない状態
+// 1)0~cut_end1, 2)cut_strt2~cut_end2, 3)cut_strt3~size-1の3領域をカット
+__global__ void BPF(cuComplex* dev, float strt, float end, int num, int size)
+{
+    int idx = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (idx < num) {
+        // cut 1) and 3)
+        int cut_end1=strt*(size/2);
+        for(int j=0; j<cut_end1; j++){
+            dev[idx*size+j]=make_cuComplex(0.0f, 0.0f);
+            dev[(idx*size)+(size-1-j)]=make_cuComplex(0.0f, 0.0f);
+        }
+
+        // cut 2)
+        int cut_strt2=end*(size/2);
+        for(int j=cut_strt2; j<size/2; j++){
+            dev[idx*size+j]=make_cuComplex(0.0f, 0.0f);
+            dev[(idx*size)+(size-1-j)]=make_cuComplex(0.0f, 0.0f);
+        }
+    }
+} 
+
+
 // LPF
 // 高周波領域から何％カットするか(cutrate)
 // 計算自体は周波数シフトしていない状態を想定 
